@@ -60,6 +60,7 @@ Testes: Vitest, Playwright
 O aplicativo utiliza duas tabelas principais:
 
 Tabela de Contatos
+
 CREATE TABLE contatos (
   id SERIAL PRIMARY KEY,
   nome TEXT NOT NULL,
@@ -71,7 +72,9 @@ CREATE TABLE contatos (
   favorito BOOLEAN DEFAULT false,
   criado_em TIMESTAMP DEFAULT NOW()
 );
+
 Tabela de Compromissos
+
 CREATE TABLE compromissos (
   id SERIAL PRIMARY KEY,
   contato_id INTEGER REFERENCES contatos(id) ON DELETE CASCADE,
@@ -84,7 +87,9 @@ CREATE TABLE compromissos (
   concluido BOOLEAN DEFAULT false,
   criado_em TIMESTAMP DEFAULT NOW()
 );
+
 🧪 Testes
+
 Execute os testes unitários e de integração:
 
 npm run test
