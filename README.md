@@ -36,8 +36,7 @@ Configure o banco de dados:
 Crie um arquivo .env na raiz do projeto:
 
 DATABASE_URL=postgresql://usuario:senha@localhost:5432/agenda_contatos
-# ou use a conexão fornecida
-DATABASE_URL=postgresql://es2_owner:npg_Pn0TDGrESy9L@ep-flat-snowflake-acq6x5in-pooler.sa-east-1.aws.neon.tech/es2?sslmode=require
+
 Execute as migrações do banco de dados:
 npm run db:migrate
 # ou
