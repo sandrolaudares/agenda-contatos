@@ -1,61 +1,125 @@
-# agenda-contatos
-Aplicativo de agenda de contatos com compromissos usando SvelteKit e Drizzle
-Agenda de Contatos com Compromissos
+# 📞 Agenda de Contatos
+
+Aplicativo de agenda de contatos com compromissos usando **SvelteKit**, **PostgreSQL** e **Drizzle ORM**.
+
 Um aplicativo web completo para gerenciamento de contatos e agendamento de compromissos, construído com tecnologias modernas de desenvolvimento web.
 
-SvelteKitPostgreSQLDockerTailwind CSS
-📋 Funcionalidades
-Gerenciamento completo de contatos (criar, visualizar, editar, excluir)
-Agendamento de compromissos vinculados a contatos
-Visualização em calendário ou lista de compromissos
-Filtros por data, tipo e status de compromissos
-Sistema de notificações para compromissos próximos
-Interface responsiva para desktop e dispositivos móveis
-🚀 Início Rápido com Docker
+![SvelteKit](https://img.shields.io/badge/SvelteKit-FF3E00?style=for-the-badge&logo=svelte&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-336791?style=for-the-badge&logo=postgresql&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+
+## 📋 Funcionalidades
+
+- ✅ **Gerenciamento completo de contatos** (criar, visualizar, editar, excluir)
+- 📅 **Agendamento de compromissos** vinculados a contatos
+- 🔍 **Busca e filtros** por nome, telefone, email
+- 📊 **Dashboard** com estatísticas e visão geral
+- ⭐ **Sistema de favoritos** para contatos importantes
+- 🏷️ **Categorização** de compromissos por tipo
+- 📱 **Interface responsiva** para desktop e dispositivos móveis
+- 🎨 **Design moderno** com Tailwind CSS
+
+## 🚀 Início Rápido com Docker
+
 A maneira mais fácil de executar o aplicativo é usando Docker Compose:
 
-git clone https://github.com/sandrolaudares/agenda-contatos-app.git
-cd agenda-contatos-app
+```bash
+git clone <repository-url>
+cd agenda-contatos
 docker-compose up -d
+```
+
 O aplicativo estará disponível em http://localhost:3000.
 
-⚙️ Instalação Manual
-Pré-requisitos
-Node.js (v16+)
-PostgreSQL (v13+)
-npm ou yarn
-Passos
-Clone o repositório:
-git clone https://github.com/sandrolaudares/agenda-contatos-app.git
-cd agenda-contatos-app
-Instale as dependências:
-npm install
-# ou
-yarn install
-Configure o banco de dados:
-Crie um arquivo .env na raiz do projeto:
+## ⚙️ Instalação Manual
 
-DATABASE_URL=postgresql://usuario:senha@localhost:5432/agenda_contatos
+### Pré-requisitos
 
-Execute as migrações do banco de dados:
-npm run db:migrate
-# ou
-yarn db:migrate
-Inicie o servidor de desenvolvimento:
-npm run dev
-# ou
-yarn dev
+- 📦 **Node.js** (v18+)
+- 🐘 **PostgreSQL** (v13+)
+- 📋 **npm** ou **yarn**
+
+### Configuração Rápida
+
+Para uma configuração automática, execute:
+
+```bash
+git clone <repository-url>
+cd agenda-contatos
+chmod +x scripts/dev-setup.sh
+./scripts/dev-setup.sh
+```
+
+### Configuração Manual
+
+1. **Clone o repositório:**
+   ```bash
+   git clone <repository-url>
+   cd agenda-contatos
+   ```
+
+2. **Instale as dependências:**
+   ```bash
+   npm install
+   # ou
+   yarn install
+   ```
+
+3. **Configure o banco de dados:**
+   
+   Crie um arquivo `.env` na raiz do projeto:
+   ```env
+   DATABASE_URL=postgresql://usuario:senha@localhost:5432/agenda_contatos
+   ```
+
+4. **Configure o banco de dados:**
+   ```bash
+   # Criar tabelas do banco de dados
+   npm run db:setup
+   
+   # Inserir dados de exemplo (opcional)
+   npm run db:seed
+   ```
+
+5. **Inicie o servidor de desenvolvimento:**
+   ```bash
+   npm run dev
+   # ou
+   yarn dev
+   ```
+
 O aplicativo estará disponível em http://localhost:5173 no modo de desenvolvimento.
 
-🛠️ Tecnologias
-Frontend: SvelteKit, TailwindCSS
-Backend: SvelteKit (SSR), API endpoints
-Banco de Dados: PostgreSQL
-ORM: Drizzle
-Containerização: Docker, Docker Compose
-CI/CD: GitHub Actions
-Testes: Vitest, Playwright
-📊 Estrutura do Banco de Dados
+## 🛠️ Tecnologias
+
+- **Frontend:** SvelteKit, TailwindCSS
+- **Backend:** SvelteKit (SSR), API endpoints
+- **Banco de Dados:** PostgreSQL
+- **ORM:** Drizzle
+- **Containerização:** Docker, Docker Compose
+- **Testes:** Vitest, Playwright
+- **Tipagem:** TypeScript
+
+## 🔌 API Endpoints
+
+### Contatos
+- `GET /api/contatos` - Lista todos os contatos
+  - Query params: `busca`, `favoritos`
+- `POST /api/contatos` - Cria um novo contato
+- `GET /api/contatos/[id]` - Busca contato por ID
+- `PUT /api/contatos/[id]` - Atualiza contato
+- `DELETE /api/contatos/[id]` - Remove contato
+
+### Compromissos
+- `GET /api/compromissos` - Lista todos os compromissos
+  - Query params: `dataInicio`, `dataFim`, `tipo`, `concluido`, `contatoId`
+- `POST /api/compromissos` - Cria um novo compromisso
+- `GET /api/compromissos/[id]` - Busca compromisso por ID
+- `PUT /api/compromissos/[id]` - Atualiza compromisso
+- `DELETE /api/compromissos/[id]` - Remove compromisso
+
+## 📊 Estrutura do Banco de Dados
 O aplicativo utiliza duas tabelas principais:
 
 Tabela de Contatos
