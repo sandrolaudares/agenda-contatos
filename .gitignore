@@ -1,0 +1,59 @@
+# Dependencies
+node_modules
+/.pnp
+.pnp.js
+
+# SvelteKit
+.svelte-kit
+build/
+
+# Environment variables
+.env
+.env.local
+.env.production
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+
+# nyc test coverage
+.nyc_output
+
+# macOS
+.DS_Store
+
+# Temporary files
+.tmp
+.temp
+
+# Editor directories and files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+Thumbs.db
+
+# Database
+*.db
+*.sqlite
+
+# Drizzle
+drizzle/
+
+# Build outputs
+dist/
