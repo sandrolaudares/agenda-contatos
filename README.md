@@ -1,180 +1,280 @@
-# 📞 Agenda de Contatos
+# 🛰️ YOLO Satellite Detector
 
-Aplicativo de agenda de contatos com compromissos usando **SvelteKit**, **PostgreSQL** e **Drizzle ORM**.
+Aplicativo web para detecção de objetos em imagens de satélite usando **YOLO (You Only Look Once)**, **SvelteKit** e **Python**.
 
-Um aplicativo web completo para gerenciamento de contatos e agendamento de compromissos, construído com tecnologias modernas de desenvolvimento web.
+Um aplicativo web moderno que utiliza inteligência artificial para identificar automaticamente objetos como veículos, pessoas, animais e estruturas em imagens de satélite de alta resolução.
 
 ![SvelteKit](https://img.shields.io/badge/SvelteKit-FF3E00?style=for-the-badge&logo=svelte&logoColor=white)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-336791?style=for-the-badge&logo=postgresql&logoColor=white)
-![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![YOLO](https://img.shields.io/badge/YOLO-00FFFF?style=for-the-badge&logo=yolo&logoColor=black)
 ![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
 
-## 📋 Funcionalidades
+## 🚀 Funcionalidades
 
-- ✅ **Gerenciamento completo de contatos** (criar, visualizar, editar, excluir)
-- 📅 **Agendamento de compromissos** vinculados a contatos
-- 🔍 **Busca e filtros** por nome, telefone, email
-- 📊 **Dashboard** com estatísticas e visão geral
-- ⭐ **Sistema de favoritos** para contatos importantes
-- 🏷️ **Categorização** de compromissos por tipo
-- 📱 **Interface responsiva** para desktop e dispositivos móveis
-- 🎨 **Design moderno** com Tailwind CSS
+- 🎯 **Detecção automática de objetos** usando modelo YOLOv8
+- 📷 **Upload de imagens** com suporte a drag & drop
+- 🖼️ **Preview em tempo real** das imagens carregadas
+- 🔍 **Visualização de resultados** com bounding boxes coloridas
+- 📊 **Estatísticas de detecção** com confiança e contagem
+- 🌐 **Interface web responsiva** e moderna
+- ⚡ **Processamento rápido** com PyTorch otimizado
+- 🛰️ **Otimizado para imagens de satélite** com classes relevantes
 
-## 🚀 Início Rápido com Docker
+## 🎯 Objetos Detectáveis
 
-A maneira mais fácil de executar o aplicativo é usando Docker Compose:
+O sistema pode identificar 19 tipos de objetos relevantes para análise de imagens de satélite:
 
+**Veículos & Transporte:**
+- 🚗 Carros
+- 🚌 Ônibus  
+- 🚛 Caminhões
+- 🏍️ Motocicletas
+- ✈️ Aviões
+- 🚂 Trens
+- ⛵ Barcos
+
+**Pessoas & Animais:**
+- 👤 Pessoas
+- 🐱 Gatos
+- 🐶 Cachorros
+- 🐴 Cavalos
+- 🐑 Ovelhas
+- 🐄 Vacas
+- 🐘 Elefantes
+- 🐻 Ursos
+- 🦓 Zebras
+- 🦒 Girafas
+
+**Outros:**
+- 🚲 Bicicletas
+- 🦅 Pássaros
+
+## 🔧 Tecnologias Utilizadas
+
+### Frontend
+- **SvelteKit** - Framework web moderno e reativo
+- **TailwindCSS** - Estilização utilitária
+- **TypeScript** - Tipagem estática
+- **Vite** - Build tool rápido
+
+### Backend
+- **Python 3.13** - Linguagem principal
+- **Flask** - API web framework
+- **Ultralytics YOLO** - Modelo de detecção de objetos
+- **OpenCV** - Processamento de imagens
+- **PyTorch** - Framework de machine learning
+- **Pillow** - Manipulação de imagens
+
+## 📋 Pré-requisitos
+
+- **Python 3.8+** com pip
+- **Node.js 18+** com npm
+- **Mínimo 4GB RAM** (recomendado 8GB)
+- **Conexão com internet** (para download do modelo YOLO)
+
+## ⚡ Instalação Rápida
+
+### 1. Clone o repositório
 ```bash
-git clone <repository-url>
-cd agenda-contatos
-docker-compose up -d
+git clone <url-do-repositorio>
+cd yolo-satellite-detector
 ```
 
-O aplicativo estará disponível em http://localhost:3000.
-
-## ⚙️ Instalação Manual
-
-### Pré-requisitos
-
-- 📦 **Node.js** (v18+)
-- 🐘 **PostgreSQL** (v13+)
-- 📋 **npm** ou **yarn**
-
-### Configuração Rápida
-
-Para uma configuração automática, execute:
-
+### 2. Execute o script de configuração
 ```bash
-git clone <repository-url>
-cd agenda-contatos
-chmod +x scripts/dev-setup.sh
+# Linux/Mac
 ./scripts/dev-setup.sh
+
+# Ou manualmente:
+pip3 install --break-system-packages -r requirements.txt
+npm install
 ```
 
-### Configuração Manual
+### 3. Inicie o aplicativo
+```bash
+# Método mais fácil - script automático
+./start-app.sh
 
-1. **Clone o repositório:**
-   ```bash
-   git clone <repository-url>
-   cd agenda-contatos
-   ```
+# Ou manualmente em terminais separados:
+# Terminal 1:
+python3 src/python/yolo_server.py
 
-2. **Instale as dependências:**
-   ```bash
-   npm install
-   # ou
-   yarn install
-   ```
+# Terminal 2:
+npm run dev
+```
 
-3. **Configure o banco de dados:**
-   
-   Crie um arquivo `.env` na raiz do projeto:
-   ```env
-   DATABASE_URL=postgresql://usuario:senha@localhost:5432/agenda_contatos
-   ```
+### 4. Acesse o aplicativo
+- **Frontend:** http://localhost:5173
+- **API:** http://localhost:5000
 
-4. **Configure o banco de dados:**
-   ```bash
-   # Criar tabelas do banco de dados
-   npm run db:setup
-   
-   # Inserir dados de exemplo (opcional)
-   npm run db:seed
-   ```
+## 🖥️ Como Usar
 
-5. **Inicie o servidor de desenvolvimento:**
-   ```bash
-   npm run dev
-   # ou
-   yarn dev
-   ```
+1. **Abra o aplicativo** no navegador (http://localhost:5173)
 
-O aplicativo estará disponível em http://localhost:5173 no modo de desenvolvimento.
+2. **Carregue uma imagem:**
+   - Clique na área de upload
+   - Ou arraste e solte uma imagem
+   - Formatos suportados: JPG, PNG, WEBP
 
-## 🛠️ Tecnologias
+3. **Visualize os resultados:**
+   - A detecção é executada automaticamente
+   - Objetos detectados aparecem com caixas coloridas
+   - Estatísticas são mostradas na lateral
 
-- **Frontend:** SvelteKit, TailwindCSS
-- **Backend:** SvelteKit (SSR), API endpoints
-- **Banco de Dados:** PostgreSQL
-- **ORM:** Drizzle
-- **Containerização:** Docker, Docker Compose
-- **Testes:** Vitest, Playwright
-- **Tipagem:** TypeScript
+4. **Interprete os resultados:**
+   - Cada cor representa um tipo de objeto
+   - Números mostram a confiança da detecção (0-100%)
+   - Lista lateral mostra todos os objetos encontrados
 
-## 🔌 API Endpoints
+## 🛠️ Scripts Disponíveis
 
-### Contatos
-- `GET /api/contatos` - Lista todos os contatos
-  - Query params: `busca`, `favoritos`
-- `POST /api/contatos` - Cria um novo contato
-- `GET /api/contatos/[id]` - Busca contato por ID
-- `PUT /api/contatos/[id]` - Atualiza contato
-- `DELETE /api/contatos/[id]` - Remove contato
+### Desenvolvimento
+```bash
+npm run dev              # Inicia frontend em modo desenvolvimento
+npm run build           # Constrói aplicação para produção
+npm run preview         # Preview da build de produção
+python3 test-setup.py    # Testa se dependências estão instaladas
+```
 
-### Compromissos
-- `GET /api/compromissos` - Lista todos os compromissos
-  - Query params: `dataInicio`, `dataFim`, `tipo`, `concluido`, `contatoId`
-- `POST /api/compromissos` - Cria um novo compromisso
-- `GET /api/compromissos/[id]` - Busca compromisso por ID
-- `PUT /api/compromissos/[id]` - Atualiza compromisso
-- `DELETE /api/compromissos/[id]` - Remove compromisso
+### Produção
+```bash
+docker-compose up        # Inicia com Docker
+./start-app.sh          # Script completo de inicialização
+```
 
-## 📊 Estrutura do Banco de Dados
-O aplicativo utiliza duas tabelas principais:
+### Utilitários
+```bash
+npm run lint            # Verifica qualidade do código
+npm run format          # Formata código automaticamente
+chmod +x scripts/*.sh   # Torna scripts executáveis
+```
 
-Tabela de Contatos
+## 🐳 Docker
 
-CREATE TABLE contatos (
-  id SERIAL PRIMARY KEY,
-  nome TEXT NOT NULL,
-  sobrenome TEXT,
-  telefone TEXT NOT NULL,
-  email TEXT,
-  endereco TEXT,
-  notas TEXT,
-  favorito BOOLEAN DEFAULT false,
-  criado_em TIMESTAMP DEFAULT NOW()
-);
+### Desenvolvimento
+```bash
+docker-compose up
+```
 
-Tabela de Compromissos
+### Produção
+```bash
+docker-compose -f docker-compose.yml up --build
+```
 
-CREATE TABLE compromissos (
-  id SERIAL PRIMARY KEY,
-  contato_id INTEGER REFERENCES contatos(id) ON DELETE CASCADE,
-  titulo TEXT NOT NULL,
-  descricao TEXT,
-  data DATE NOT NULL,
-  hora TIME NOT NULL,
-  local TEXT,
-  tipo TEXT DEFAULT 'outro',
-  concluido BOOLEAN DEFAULT false,
-  criado_em TIMESTAMP DEFAULT NOW()
-);
+## 📁 Estrutura do Projeto
 
-🧪 Testes
+```
+yolo-satellite-detector/
+├── src/
+│   ├── routes/           # Páginas SvelteKit
+│   ├── python/          # Servidor YOLO
+│   └── app.css         # Estilos globais
+├── static/
+│   └── examples/       # Imagens de exemplo
+├── scripts/           # Scripts de configuração
+├── requirements.txt   # Dependências Python
+├── package.json      # Dependências Node.js
+├── start-app.sh     # Script de inicialização
+└── README.md        # Este arquivo
+```
 
-Execute os testes unitários e de integração:
+## 🔍 API Endpoints
 
-npm run test
-# ou
-yarn test
-Execute os testes end-to-end com Playwright:
+### GET `/health`
+Verifica status do servidor YOLO
+```json
+{
+  "status": "ok",
+  "model_loaded": true,
+  "classes_available": 19,
+  "message": "Servidor YOLO está funcionando"
+}
+```
 
-npm run test:e2e
-# ou
-yarn test:e2e
-🚢 Implantação
-O aplicativo está configurado para implantação fácil em várias plataformas:
+### POST `/detect`
+Detecta objetos em uma imagem
+```bash
+curl -X POST http://localhost:5000/detect \
+  -H "Content-Type: application/json" \
+  -d '{"image": "base64_image_data"}'
+```
 
-Vercel
-npm install -g vercel
-vercel login
-vercel
-Netlify
-Conecte o repositório ao Netlify e configure as variáveis de ambiente.
+## 🎯 Exemplos de Uso
 
-📝 Licença
-Este projeto está licenciado sob a licença MIT - veja o arquivo LICENSE para detalhes.
+### Imagens Recomendadas
+- **Google Earth screenshots**
+- **Imagens de satélite de alta resolução**
+- **Fotos aéreas de cidades**
+- **Imagens de fazendas e campo**
+- **Portos e aeroportos**
 
-👥 Contribuição
-Contribuições são bem-vindas! Por favor, leia o arquivo CONTRIBUTING.md para detalhes sobre nosso código de conduta e o processo para enviar pull requests.
+### Casos de Uso
+- **Monitoramento urbano** - Contagem de veículos
+- **Agricultura** - Identificação de animais
+- **Segurança** - Detecção de pessoas e veículos
+- **Pesquisa** - Análise de padrões de ocupação
+- **Logística** - Monitoramento de frotas
+
+## ⚠️ Limitações
+
+- **Resolução mínima:** 416x416 pixels recomendado
+- **Tamanho máximo:** 10MB por imagem
+- **Formatos:** JPG, PNG, WEBP apenas
+- **Processamento:** CPU apenas (GPU opcional)
+
+## 🚨 Solução de Problemas
+
+### Erro: Módulo não encontrado
+```bash
+pip3 install --break-system-packages -r requirements.txt
+```
+
+### Erro: Porta em uso
+```bash
+# Matar processos nas portas
+sudo lsof -ti:5000 | xargs kill -9
+sudo lsof -ti:5173 | xargs kill -9
+```
+
+### Erro: Modelo YOLO não carrega
+```bash
+# Limpar cache do YOLO
+rm -rf ~/.cache/ultralytics/
+python3 -c "from ultralytics import YOLO; YOLO('yolov8n.pt')"
+```
+
+### Performance lenta
+- Use imagens menores (< 2MB)
+- Feche outros aplicativos
+- Considere usar GPU com CUDA
+
+## 🤝 Contribuindo
+
+1. Fork o projeto
+2. Crie uma branch (`git checkout -b feature/nova-funcionalidade`)
+3. Commit suas mudanças (`git commit -am 'Adiciona nova funcionalidade'`)
+4. Push para a branch (`git push origin feature/nova-funcionalidade`)
+5. Abra um Pull Request
+
+## 📝 Licença
+
+Este projeto está licenciado sob a Licença MIT - veja o arquivo [LICENSE](LICENSE) para detalhes.
+
+## 🎉 Status do Projeto
+
+✅ **FUNCIONANDO** - Aplicativo totalmente operacional!
+
+- ✅ Backend Python com YOLO configurado
+- ✅ Frontend SvelteKit responsivo  
+- ✅ API de detecção funcionando
+- ✅ Upload de imagens implementado
+- ✅ Visualização de resultados
+- ✅ Scripts de automação
+- ✅ Documentação completa
+
+**Próximas melhorias planejadas:**
+- 🔄 Suporte a múltiplas imagens
+- 📊 Relatórios em PDF
+- 🎨 Temas personalizáveis
+- 🌍 Integração com mapas
+- 📱 App mobile

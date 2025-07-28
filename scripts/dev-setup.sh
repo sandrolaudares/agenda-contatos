@@ -1,43 +1,78 @@
 #!/bin/bash
 
-echo "🚀 Setting up Agenda de Contatos development environment..."
+echo "🛰️ YOLO Satellite Detector - Development Setup"
+echo "=============================================="
 
-# Check if Node.js is installed
+# Verificar se estamos no diretório correto
+if [ ! -f "package.json" ]; then
+    echo "❌ Execute este script a partir da raiz do projeto"
+    exit 1
+fi
+
+# Verificar dependências do sistema
+echo "🔍 Verificando dependências do sistema..."
+
+# Python 3
+if ! command -v python3 &> /dev/null; then
+    echo "❌ Python 3 não encontrado"
+    echo "📥 Instale Python 3.8+ de https://python.org"
+    exit 1
+fi
+echo "✅ Python: $(python3 --version)"
+
+# Node.js
 if ! command -v node &> /dev/null; then
-    echo "❌ Node.js is not installed. Please install Node.js 18+ first."
+    echo "❌ Node.js não encontrado"
+    echo "📥 Instale Node.js 18+ de https://nodejs.org"
     exit 1
 fi
+echo "✅ Node.js: $(node --version)"
 
-# Check if PostgreSQL is running
-if ! command -v psql &> /dev/null; then
-    echo "❌ PostgreSQL is not installed. Please install PostgreSQL 13+ first."
+# npm
+if ! command -v npm &> /dev/null; then
+    echo "❌ npm não encontrado"
     exit 1
 fi
+echo "✅ npm: $(npm --version)"
 
-# Create .env file if it doesn't exist
-if [ ! -f .env ]; then
-    echo "📄 Creating .env file..."
-    cp .env.example .env
-    echo "✅ Created .env file. Please update it with your database credentials."
-fi
+# Instalar dependências
+echo ""
+echo "📦 Instalando dependências..."
 
-# Install dependencies
-echo "📦 Installing dependencies..."
+# Node.js dependencies
+echo "🟦 Instalando dependências Node.js..."
 npm install
+if [ $? -ne 0 ]; then
+    echo "❌ Erro ao instalar dependências Node.js"
+    exit 1
+fi
 
-# Setup database
-echo "🗄️ Setting up database..."
-npm run db:setup
+# Python dependencies
+echo "🐍 Instalando dependências Python..."
+pip3 install -r requirements.txt
+if [ $? -ne 0 ]; then
+    echo "❌ Erro ao instalar dependências Python"
+    echo "💡 Tente: pip3 install --user -r requirements.txt"
+    exit 1
+fi
 
-# Seed database with example data
-echo "🌱 Seeding database with example data..."
-npm run db:seed
+# Criar diretórios necessários
+mkdir -p models
+mkdir -p static/uploads
 
 echo ""
-echo "🎉 Setup completed successfully!"
+echo "🎉 Setup de desenvolvimento concluído!"
 echo ""
-echo "To start the development server, run:"
-echo "  npm run dev"
+echo "🚀 Para iniciar o desenvolvimento:"
+echo "   1. Terminal 1: npm run python:serve"
+echo "   2. Terminal 2: npm run dev"
 echo ""
-echo "The application will be available at: http://localhost:5173"
+echo "🌐 URLs do aplicativo:"
+echo "   Frontend: http://localhost:5173"
+echo "   API YOLO: http://localhost:5000"
+echo ""
+echo "📖 Comandos úteis:"
+echo "   npm run build     - Build para produção"
+echo "   npm run preview   - Preview do build"
+echo "   npm run test      - Executar testes"
 echo ""

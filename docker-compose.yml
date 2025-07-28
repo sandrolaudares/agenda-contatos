@@ -1,38 +1,32 @@
 version: '3.8'
 
 services:
-  db:
-    image: postgres:15-alpine
-    container_name: agenda_contatos_db
-    environment:
-      POSTGRES_DB: agenda_contatos
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
+  app:
+    build: .
     ports:
-      - "5432:5432"
+      - "3000:3000"  # Frontend SvelteKit
+      - "5000:5000"  # API Python YOLO
+    environment:
+      - NODE_ENV=production
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - ./src/python:/app/src/python:ro  # Volume para desenvolvimento
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: ["CMD", "curl", "-f", "http://localhost:3000", "&&", "curl", "-f", "http://localhost:5000/health"]
       interval: 30s
       timeout: 10s
       retries: 3
-
-  app:
+      start_period: 40s
+    restart: unless-stopped
+    
+  # Serviço separado para desenvolvimento do Python
+  yolo-dev:
     build: .
-    container_name: agenda_contatos_app
-    environment:
-      DATABASE_URL: postgresql://postgres:password@db:5432/agenda_contatos
-      NODE_ENV: production
-      PORT: 3000
     ports:
-      - "3000:3000"
-    depends_on:
-      db:
-        condition: service_healthy
+      - "5001:5000"  # Porta alternativa para desenvolvimento
+    command: python3 src/python/yolo_server.py
     volumes:
-      - ./src:/app/src
-      - ./static:/app/static
-
-volumes:
-  postgres_data:
+      - ./src/python:/app/src/python
+      - ./requirements.txt:/app/requirements.txt
+    profiles:
+      - dev
+    restart: unless-stopped

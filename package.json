@@ -1,7 +1,7 @@
 {
-  "name": "agenda-contatos",
+  "name": "yolo-satellite-detector",
   "version": "1.0.0",
-  "description": "Aplicativo de agenda de contatos com compromissos usando SvelteKit e Drizzle",
+  "description": "Aplicativo web para detecção de objetos em imagens de satélite usando YOLO",
   "private": true,
   "scripts": {
     "dev": "vite dev",
@@ -13,21 +13,16 @@
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
     "lint": "prettier --plugin-search-dir . --check . && eslint .",
     "format": "prettier --plugin-search-dir . --write .",
-    "db:generate": "drizzle-kit generate:pg",
-    "db:migrate": "drizzle-kit push:pg",
-    "db:studio": "drizzle-kit studio",
-    "db:setup": "node scripts/setup-db.js",
-    "db:seed": "node scripts/seed-db.js"
+    "python:setup": "python -m pip install -r requirements.txt",
+    "python:serve": "python src/python/yolo_server.py"
   },
   "devDependencies": {
     "@playwright/test": "^1.40.0",
     "@sveltejs/adapter-auto": "^2.0.0",
     "@sveltejs/kit": "^1.20.4",
-
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
     "autoprefixer": "^10.4.16",
-    "drizzle-kit": "^0.20.4",
     "eslint": "^8.28.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-svelte": "^2.30.0",
@@ -43,8 +38,6 @@
     "vitest": "^0.34.0"
   },
   "dependencies": {
-    "drizzle-orm": "^0.29.0",
-    "postgres": "^3.4.3",
     "dotenv": "^16.3.1",
     "zod": "^3.22.4"
   },
