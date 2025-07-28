@@ -1,5 +1,7 @@
 <script>
   import { onMount } from 'svelte';
+  import DetectionStats from '$lib/components/DetectionStats.svelte';
+  import { validateImageFile, fileToBase64, downloadResults, config } from '$lib/utils.js';
   
   let files;
   let selectedImage = null;
@@ -10,11 +12,13 @@
   let serverStatus = 'checking';
   let uploadArea;
   let isDragging = false;
+  let processingTime = 0;
+  let errors = [];
 
   // Verificar status do servidor YOLO
   async function checkServerStatus() {
     try {
-      const response = await fetch('http://localhost:5000/health');
+      const response = await fetch(`${config.API_BASE_URL}/health`);
       if (response.ok) {
         serverStatus = 'online';
       } else {
@@ -25,53 +29,50 @@
     }
   }
 
-  // Converter arquivo para base64
-  function fileToBase64(file) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = error => reject(error);
-    });
-  }
-
   // Processar upload de imagem
   async function handleImageUpload(file) {
-    if (!file || !file.type.startsWith('image/')) {
-      alert('Por favor, selecione uma imagem válida.');
+    // Validar arquivo
+    const validation = validateImageFile(file);
+    if (!validation.valid) {
+      errors = validation.errors;
       return;
     }
 
+    errors = [];
     selectedImage = file;
     imagePreview = await fileToBase64(file);
     detectionResults = null;
     annotatedImage = null;
+    processingTime = 0;
   }
 
   // Executar detecção de objetos
   async function detectObjects() {
     if (!selectedImage) {
-      alert('Selecione uma imagem primeiro.');
+      errors = ['Selecione uma imagem primeiro.'];
       return;
     }
 
     if (serverStatus !== 'online') {
-      alert('Servidor YOLO não está disponível. Certifique-se de que está executando.');
+      errors = ['Servidor YOLO não está disponível. Certifique-se de que está executando.'];
       return;
     }
 
     isProcessing = true;
+    errors = [];
+    const startTime = performance.now();
 
     try {
       const base64Image = await fileToBase64(selectedImage);
       
-      const response = await fetch('http://localhost:5000/detect', {
+      const response = await fetch(`${config.API_BASE_URL}/detect`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          image: base64Image
+          image: base64Image,
+          confidence_threshold: config.CONFIDENCE_THRESHOLD
         })
       });
 
@@ -80,14 +81,22 @@
       if (result.success) {
         detectionResults = result;
         annotatedImage = result.annotated_image;
+        processingTime = (performance.now() - startTime) / 1000; // Convert to seconds
       } else {
-        alert(`Erro na detecção: ${result.error}`);
+        errors = [`Erro na detecção: ${result.error}`];
       }
     } catch (error) {
       console.error('Erro:', error);
-      alert('Erro ao processar imagem. Verifique se o servidor YOLO está executando.');
+      errors = ['Erro ao processar imagem. Verifique se o servidor YOLO está executando.'];
     } finally {
       isProcessing = false;
+    }
+  }
+
+  // Função para download dos resultados
+  function handleDownloadResults() {
+    if (detectionResults && selectedImage) {
+      downloadResults(detectionResults.detections, selectedImage.name);
     }
   }
 
@@ -157,6 +166,25 @@
       {/if}
     </div>
   </div>
+
+  <!-- Exibição de Erros -->
+  {#if errors.length > 0}
+    <div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-8">
+      <div class="flex items-center mb-2">
+        <svg class="w-5 h-5 text-red-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        <h3 class="text-sm font-medium text-red-800">
+          {errors.length === 1 ? 'Erro encontrado' : `${errors.length} erros encontrados`}
+        </h3>
+      </div>
+      <ul class="list-disc list-inside space-y-1">
+        {#each errors as error}
+          <li class="text-sm text-red-700">{error}</li>
+        {/each}
+      </ul>
+    </div>
+  {/if}
 
   <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
     <!-- Upload de Imagem -->
@@ -237,20 +265,17 @@
           <p class="text-gray-500">Selecione uma imagem e clique em "Detectar Objetos" para ver os resultados</p>
         </div>
       {:else}
-        <!-- Estatísticas -->
-        <div class="grid grid-cols-3 gap-4 mb-6">
-          <div class="bg-blue-50 p-4 rounded-lg text-center">
-            <div class="text-2xl font-bold text-blue-600">{detectionResults.stats.total_objects}</div>
-            <div class="text-sm text-blue-700">Objetos Detectados</div>
-          </div>
-          <div class="bg-green-50 p-4 rounded-lg text-center">
-            <div class="text-2xl font-bold text-green-600">{detectionResults.stats.classes_found.length}</div>
-            <div class="text-sm text-green-700">Classes Diferentes</div>
-          </div>
-          <div class="bg-purple-50 p-4 rounded-lg text-center">
-            <div class="text-2xl font-bold text-purple-600">{(detectionResults.stats.avg_confidence * 100).toFixed(1)}%</div>
-            <div class="text-sm text-purple-700">Confiança Média</div>
-          </div>
+        <!-- Botão de Download -->
+        <div class="mb-6 flex justify-end">
+          <button
+            on:click={handleDownloadResults}
+            class="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg transition-colors flex items-center"
+          >
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-4-4m4 4l4-4m5-6H3a2 2 0 00-2 2v12a2 2 0 002 2h18a2 2 0 002-2V8a2 2 0 00-2-2z"></path>
+            </svg>
+            Baixar Resultados (JSON)
+          </button>
         </div>
 
         <!-- Imagem com Anotações -->
@@ -293,6 +318,13 @@
       {/if}
     </div>
   </div>
+
+  <!-- Estatísticas Detalhadas -->
+  {#if detectionResults}
+    <div class="mt-8">
+      <DetectionStats detections={detectionResults.detections} {processingTime} />
+    </div>
+  {/if}
 
   <!-- Informações Adicionais -->
   <div class="mt-12 bg-white rounded-lg shadow-md p-6">
