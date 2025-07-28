@@ -52,8 +52,43 @@ Thumbs.db
 *.db
 *.sqlite
 
-# Drizzle
-drizzle/
-
 # Build outputs
 dist/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# YOLO models and cache
+*.pt
+*.onnx
+*.engine
+runs/
+models/
+yolo*/
+.ultralytics/
+
+# Uploaded images
+static/uploads/
+uploads/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# PyTorch
+*.pth
+
+# TensorFlow
+*.pb
+*.tflite
+
+# OpenCV cache
+.opencv/

@@ -1,45 +1,45 @@
-FROM node:18-alpine AS builder
+# Use uma imagem base que inclui Python e Node.js
+FROM node:18-bullseye
 
+# Instalar Python e dependências do sistema
+RUN apt-get update && apt-get install -y \
+    python3 \
+    python3-pip \
+    python3-dev \
+    libgl1-mesa-glx \
+    libglib2.0-0 \
+    libsm6 \
+    libxext6 \
+    libxrender-dev \
+    libgomp1 \
+    libgthread-2.0-0 \
+    && rm -rf /var/lib/apt/lists/*
+
+# Criar diretório de trabalho
 WORKDIR /app
 
-# Copy package files
+# Copiar arquivos de configuração
 COPY package*.json ./
+COPY requirements.txt ./
 
-# Install dependencies
-RUN npm ci
+# Instalar dependências Node.js
+RUN npm ci --only=production
 
-# Copy source code
+# Instalar dependências Python
+RUN pip3 install --no-cache-dir -r requirements.txt
+
+# Copiar código fonte
 COPY . .
 
-# Build the application
+# Construir aplicação
 RUN npm run build
 
-# Production stage
-FROM node:18-alpine AS runner
+# Expor portas
+EXPOSE 3000 5000
 
-WORKDIR /app
+# Criar script de inicialização
+RUN echo '#!/bin/bash\npython3 src/python/yolo_server.py &\nnpm run preview -- --host 0.0.0.0 --port 3000' > start.sh
+RUN chmod +x start.sh
 
-# Copy package files
-COPY package*.json ./
-
-# Install only production dependencies
-RUN npm ci --only=production && npm cache clean --force
-
-# Copy built application
-COPY --from=builder /app/build build/
-COPY --from=builder /app/static static/
-COPY --from=builder /app/drizzle.config.ts ./
-COPY --from=builder /app/src/lib/db ./src/lib/db
-
-# Create a non-root user
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 sveltekit
-
-USER sveltekit
-
-EXPOSE 3000
-
-ENV NODE_ENV=production
-ENV PORT=3000
-
-CMD ["node", "build"]
+# Comando para iniciar ambos os serviços
+CMD ["./start.sh"]
